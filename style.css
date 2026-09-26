@@ -1,0 +1,15 @@
+:root { --bg: #0c0e0d; --ink: #eef1ea; --dim: #c3cabe; --faint: #8f998d; --moss: #a9d68f; --line: rgba(255, 255, 255, .12); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--dim); font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif; line-height: 1.9; }
+main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
+.brand { margin: 0 0 36px; font-size: 20px; letter-spacing: .3em; }
+.brand a { color: var(--ink); text-decoration: none; }
+.brand span { display: block; margin-top: 2px; font-size: 10px; letter-spacing: .6em; color: var(--faint); }
+h1 { margin: 0 0 6px; font-size: 24px; font-weight: 400; letter-spacing: .12em; color: var(--ink); }
+h2 { margin: 36px 0 6px; font-size: 16px; font-weight: 400; letter-spacing: .1em; color: var(--ink); }
+h3 { margin: 24px 0 4px; font-size: 14.5px; font-weight: 400; color: var(--ink); }
+p { margin: 0 0 12px; font-size: 14px; }
+.date { font-size: 12px; color: var(--faint); margin-bottom: 24px; }
+a { color: var(--moss); text-underline-offset: 3px; }
+hr { margin: 56px 0; border: 0; border-top: 1px solid var(--line); }
+.links { margin-top: 32px; font-size: 13px; }
