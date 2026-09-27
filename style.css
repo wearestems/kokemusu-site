@@ -13,3 +13,4 @@ p { margin: 0 0 12px; font-size: 14px; }
 a { color: var(--moss); text-underline-offset: 3px; }
 hr { margin: 56px 0; border: 0; border-top: 1px solid var(--line); }
 .links { margin-top: 32px; font-size: 13px; }
+.mark { display: block; width: 88px; height: 88px; margin: 0 0 28px; border-radius: 20px; }
