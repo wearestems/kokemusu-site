@@ -51,6 +51,22 @@ img, video { display: block; max-width: 100%; }
 }
 .bar.is-solid { background: rgba(12, 14, 13, .72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .bar-name { font-family: var(--latin); font-size: 14px; letter-spacing: .42em; color: var(--ink); text-decoration: none; }
+.bar-right { display: flex; align-items: center; gap: 10px; }
+.snd {
+  appearance: none; display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 13px 0 11px; cursor: pointer;
+  border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--faint);
+  font: 13px/1 var(--latin); letter-spacing: .12em; transition: color .5s var(--ease), border-color .5s var(--ease);
+}
+html[lang="ja"] .snd { font-family: var(--mincho); font-size: 12px; }
+.snd[aria-pressed="true"] { color: var(--ink); border-color: rgba(169, 214, 143, .4); }
+.snd .bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 11px; }
+.snd .bars i { width: 2px; height: 3px; border-radius: 1px; background: currentColor; transition: height .6s var(--ease); }
+.snd[aria-pressed="true"] .bars i { background: var(--moss); animation: eq 1.6s ease-in-out infinite; }
+.snd[aria-pressed="true"] .bars i:nth-child(2) { animation-delay: -.5s; }
+.snd[aria-pressed="true"] .bars i:nth-child(3) { animation-delay: -1s; }
+.snd[hidden] { display: none; }
+@keyframes eq { 0%, 100% { height: 3px; } 50% { height: 11px; } }
+@media (max-width: 420px) { .bar { gap: 8px; } .snd-t { max-width: 64px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .bar-right { gap: 6px; } .snd { padding: 0 10px 0 9px; gap: 6px; } .lang button { padding: 5px 9px; } .bar-name { letter-spacing: .26em; } }
 .lang { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
 .lang button {
   appearance: none; border: 0; background: none; color: var(--faint); cursor: pointer;
@@ -97,11 +113,12 @@ html[lang="ja"] .btn { font-family: var(--mincho); font-size: 13px; }
 .btn.is-quiet { border-color: transparent; background: none; backdrop-filter: none; color: var(--dim); }
 
 .phone {
-  position: relative; width: min(300px, 70vw); aspect-ratio: 1179 / 2556; justify-self: center;
-  border-radius: 46px; padding: 9px; background: #050706;
+  --pw: min(300px, 70vw);
+  position: relative; width: var(--pw); justify-self: center; flex: none;
+  border-radius: calc(var(--pw) * .165); padding: calc(var(--pw) * .032); background: #050706;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .14), 0 40px 90px rgba(0, 0, 0, .6), 0 0 120px rgba(90, 130, 100, .12);
 }
-.phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 38px; }
+.phone img { width: 100%; height: auto; aspect-ratio: 1179 / 2556; object-fit: cover; border-radius: calc(var(--pw) * .133); }
 .hero .phone { transform: rotate(2deg); }
 
 /* ── 本文 ── */
@@ -133,10 +150,7 @@ html[lang="ja"] h2 em { font-style: normal; font-size: .62em; letter-spacing: .1
 
 .row { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 64px; }
 .row.flip > :first-child { order: 2; }
-.row .phone { width: min(290px, 68vw); }
-.duo { display: flex; justify-content: center; gap: 26px; }
-.duo .phone { width: min(250px, 42vw); }
-.duo .phone:nth-child(2) { margin-top: 70px; }
+.row .phone { --pw: min(290px, 68vw); }
 
 .photo { position: relative; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px var(--line); }
 .photo img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; filter: saturate(.85) brightness(.9); }
@@ -162,6 +176,75 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 footer a { text-decoration: none; }
 footer a:hover { color: var(--ink); }
 
+/* ── 04 苔と器：写真の標本帳。苔ごとに一段、六つの器を並べる（狭い画面では横にすべらせる） ── */
+.kinds-head { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 64px; align-items: end; margin-bottom: 56px; }
+.kinds-head p { margin: 0; }
+.plate { padding: 26px 0 30px; border-top: 1px solid var(--line); }
+.plate-h { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; margin-bottom: 18px; }
+.plate-n { font-size: 12px; letter-spacing: .1em; color: var(--faint); }
+.plate-h b { font-weight: 400; font-size: 26px; color: var(--ink); letter-spacing: .03em; }
+html[lang="ja"] .plate-h b { font-size: 19px; letter-spacing: .14em; }
+.plate-h i { font-size: 17px; color: var(--dim); }
+.plate-h small { flex-basis: 100%; font-size: 14px; color: var(--faint); padding-left: 32px; }
+.strip { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.strip figure { margin: 0; }
+.strip img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 10px; filter: brightness(.92) saturate(.92); transition: filter .8s var(--ease), transform .8s var(--ease); }
+.strip figure:hover img { filter: none; transform: scale(1.015); }
+.strip figcaption { margin-top: 8px; font-size: 13px; letter-spacing: .06em; color: var(--faint); text-align: center; }
+html[lang="ja"] .strip figcaption { font-size: 11px; letter-spacing: .12em; }
+.kinds .more { max-width: none; margin: 8px 0 0; padding-top: 22px; border-top: 1px solid var(--line); color: var(--faint); font-size: .9em; font-style: italic; }
+html[lang="ja"] .kinds .more { font-style: normal; }
+@media (max-width: 860px) {
+  .kinds-head { grid-template-columns: 1fr; margin-bottom: 36px; }
+  .strip { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -20px; padding: 0 20px 6px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip figure { flex: none; width: 42vw; scroll-snap-align: start; scroll-margin-left: 20px; }
+  .plate-h small { padding-left: 0; }
+}
+
+/* ── 帯の音のボタンから開く小さな板：曲を選ぶ・止める ── */
+.snd-wrap { position: relative; }
+.snd-menu {
+  position: absolute; top: calc(100% + 10px); right: 0; width: 220px; padding: 8px;
+  border: 1px solid var(--line); border-radius: 16px; background: rgba(16, 19, 18, .82);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); box-shadow: 0 20px 50px rgba(0, 0, 0, .5);
+  transform-origin: top right; animation: menuIn .5s var(--ease);
+}
+.snd-menu[hidden] { display: none; }
+@keyframes menuIn { from { opacity: 0; transform: translateY(-6px) scale(.97); filter: blur(4px); } }
+.snd-menu-h { margin: 4px 8px 6px; font-size: 11px; letter-spacing: .28em; text-transform: uppercase; color: var(--faint); }
+html[lang="ja"] .snd-menu-h { letter-spacing: .2em; }
+.snd-item, .snd-off {
+  appearance: none; display: flex; align-items: center; gap: 12px; width: 100%; padding: 7px 8px; cursor: pointer; text-align: left;
+  border: 0; border-radius: 10px; background: none; color: var(--dim); font: 15px/1.2 var(--latin); letter-spacing: .03em;
+}
+html[lang="ja"] .snd-item, html[lang="ja"] .snd-off { font-family: var(--mincho); font-size: 13px; letter-spacing: .1em; }
+.snd-item:hover, .snd-off:hover { background: rgba(255, 255, 255, .06); color: var(--ink); }
+.snd-item img { width: 30px; height: 30px; border-radius: 7px; object-fit: cover; filter: saturate(.8) brightness(.85); }
+.snd-item[aria-pressed="true"] { color: var(--ink); }
+.snd-item[aria-pressed="true"]::after { content: ""; margin-left: auto; width: 6px; height: 6px; border-radius: 50%; background: var(--moss); box-shadow: 0 0 8px rgba(169, 214, 143, .7); }
+.snd-off { margin-top: 4px; padding: 10px 8px; border-top: 1px solid var(--line); border-radius: 0 0 10px 10px; color: var(--faint); font-size: 13px; }
+.snd-off[hidden] { display: none; }
+
+/* ── 曲の選び：押すとその曲が流れる。流れている曲は苔色の点と縁 ── */
+.pieces-h { margin: 30px 0 12px !important; font-size: .82em; color: var(--faint); letter-spacing: .04em; }
+.pieces { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-width: 30em; }
+.piece {
+  appearance: none; display: flex; align-items: center; gap: 12px; padding: 8px 12px 8px 8px; cursor: pointer; text-align: left;
+  border: 1px solid var(--line); border-radius: 14px; background: rgba(255, 255, 255, .025); color: var(--dim); font: inherit;
+  transition: border-color .5s var(--ease), background .5s var(--ease), transform .6s var(--ease);
+}
+.piece:hover { background: rgba(255, 255, 255, .05); }
+.piece:active { transform: scale(.97); }
+.piece img { width: 48px; height: 48px; flex: none; border-radius: 10px; object-fit: cover; filter: saturate(.8) brightness(.85); }
+.piece b { display: block; font-weight: 400; font-size: 16px; color: var(--ink); letter-spacing: .03em; }
+html[lang="ja"] .piece b { font-size: 14px; letter-spacing: .1em; }
+.piece small { display: block; margin-top: 2px; font-size: 12px; line-height: 1.45; color: var(--faint); }
+html[lang="ja"] .piece small { font-size: 11px; }
+.piece[aria-pressed="true"] { border-color: rgba(169, 214, 143, .45); background: rgba(169, 214, 143, .06); }
+.piece[aria-pressed="true"] b::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 8px; border-radius: 50%; background: var(--moss); box-shadow: 0 0 8px rgba(169, 214, 143, .7); vertical-align: 2px; animation: pulse 2.4s ease-in-out infinite; }
+@media (max-width: 420px) { .pieces { grid-template-columns: 1fr; } }
+
 /* ── 浮かび上がり：速く出て長く減速、ぼけを解きながら ── */
 .reveal { opacity: 0; transform: translateY(26px); filter: blur(6px); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease), filter 1.1s var(--ease); }
 .reveal.is-in { opacity: 1; transform: none; filter: none; }
@@ -175,11 +258,10 @@ footer a:hover { color: var(--ink); }
 @media (max-width: 860px) {
   body { font-size: 18px; }
   .hero { grid-template-columns: 1fr; padding-top: 120px; gap: 56px; text-align: left; }
-  .hero .phone { width: min(260px, 66vw); }
+  .hero .phone { --pw: min(260px, 66vw); }
   section { padding: 88px 20px; }
   .row { grid-template-columns: 1fr; gap: 48px; }
   .row.flip > :first-child { order: 0; }
-  .duo { gap: 14px; }
   .plans { grid-template-columns: 1fr; }
   .wordmark { letter-spacing: .2em; margin-right: -.2em; }
 }
@@ -189,9 +271,25 @@ footer a:hover { color: var(--ink); }
 
 <header class="bar" id="bar">
   <a class="bar-name" href="#top">KOKEMUSU</a>
+  <div class="bar-right">
+  <div class="snd-wrap">
+  <button type="button" class="snd" id="snd" aria-pressed="false" aria-haspopup="true" aria-expanded="false" aria-controls="sndMenu" aria-label="Sound">
+    <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+    <span class="snd-t" id="sndT"><span class="t-en">Sound</span><span class="t-ja">音</span></span>
+  </button>
+  <div class="snd-menu" id="sndMenu" hidden>
+    <p class="snd-menu-h"><span class="t-en">Ambient music</span><span class="t-ja">庭の音楽</span></p>
+    <button type="button" class="snd-item" data-piece="hall" aria-pressed="false"><img src="lp/music-hall.jpg" alt="" width="96" height="96"><span class="t-en">Moss hall</span><span class="t-ja">苔の堂</span></button>
+    <button type="button" class="snd-item" data-piece="dusk" aria-pressed="false"><img src="lp/music-dusk.jpg" alt="" width="96" height="96"><span class="t-en">Evening wind</span><span class="t-ja">夕風</span></button>
+    <button type="button" class="snd-item" data-piece="night" aria-pressed="false"><img src="lp/music-night.jpg" alt="" width="96" height="96"><span class="t-en">Night garden</span><span class="t-ja">夜の庭</span></button>
+    <button type="button" class="snd-item" data-piece="rain" aria-pressed="false"><img src="lp/music-rain.jpg" alt="" width="96" height="96"><span class="t-en">Rain</span><span class="t-ja">雨音</span></button>
+    <button type="button" class="snd-off" id="sndOff" hidden><span class="t-en">Turn sound off</span><span class="t-ja">音を止める</span></button>
+  </div>
+  </div>
   <div class="lang" role="group" aria-label="Language">
     <button type="button" data-l="en" aria-pressed="true">EN</button>
     <button type="button" data-l="ja" aria-pressed="false">日本語</button>
+  </div>
   </div>
 </header>
 
@@ -285,20 +383,31 @@ footer a:hover { color: var(--ink); }
     </div>
   </section>
 
-  <section class="feature">
-    <div class="wrap row flip">
-      <div>
-        <p class="label reveal" data-n="04"><span class="rule"></span><span class="t-en">Mosses &amp; vessels</span><span class="t-ja">苔と器</span></p>
-        <h2 class="reveal d1"><span class="t-en">Collect many kinds<em>of moss and vessels.</em></span><span class="t-ja">さまざまな苔と器を<em>集めて、苔帳に残す</em></span></h2>
+  <section class="feature kinds">
+    <div class="wrap">
+      <div class="kinds-head">
+        <div>
+          <p class="label reveal" data-n="04"><span class="rule"></span><span class="t-en">Mosses &amp; vessels</span><span class="t-ja">苔と器</span></p>
+          <h2 class="reveal d1"><span class="t-en">Collect many kinds<em>of moss and vessels.</em></span><span class="t-ja">さまざまな苔と器を<em>集めて、苔帳に残す</em></span></h2>
+        </div>
         <p class="reveal d2">
           <span class="t-en">Rainwater collects as you rest. Trade it for new mosses and Japanese ceramics and glass, grow them on your shelf, and keep every finished pot in your Moss Book.</span>
           <span class="t-ja">雨を降らせると雨水がたまります。雨水で新しい苔や器を迎え、棚で育て、育ちきった鉢は苔帳に残していけます。</span>
         </p>
       </div>
-      <div class="duo">
-        <div class="phone reveal d1"><img data-img="shelf" src="lp/en-shelf.jpg" alt="" loading="lazy" width="640" height="1388"></div>
-        <div class="phone reveal d2"><img data-img="album" src="lp/en-album.jpg" alt="" loading="lazy" width="640" height="1388"></div>
+      <div class="plate reveal">
+        <div class="plate-h"><span class="plate-n">01</span><b><span class="t-en">Sugi-goke</span><span class="t-ja">スギゴケ</span></b><i>Polytrichum commune</i><small><span class="t-en">Haircap moss. Opens its leaves like stars</span><span class="t-ja">細い葉が星形に開く</span></small></div>
+        <div class="strip"><figure><img src="lp/kind-sugigoke-sphere.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></figcaption></figure><figure><img src="lp/kind-sugigoke-jar.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></figcaption></figure><figure><img src="lp/kind-sugigoke-cube.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></figcaption></figure><figure><img src="lp/kind-sugigoke-round.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Kiyomizu ware</span><span class="t-ja">清水焼</span></figcaption></figure><figure><img src="lp/kind-sugigoke-oval.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Mashiko ware</span><span class="t-ja">益子焼</span></figcaption></figure><figure><img src="lp/kind-sugigoke-rect.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Tokoname ware</span><span class="t-ja">常滑焼</span></figcaption></figure></div>
       </div>
+      <div class="plate reveal">
+        <div class="plate-h"><span class="plate-n">02</span><b><span class="t-en">Hai-goke</span><span class="t-ja">ハイゴケ</span></b><i>Hypnum plumaeforme</i><small><span class="t-en">Creeping moss. Hugs the ground, spreading softly</span><span class="t-ja">地面を這うように広がる</span></small></div>
+        <div class="strip"><figure><img src="lp/kind-hainegoke-sphere.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></figcaption></figure><figure><img src="lp/kind-hainegoke-jar.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></figcaption></figure><figure><img src="lp/kind-hainegoke-cube.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></figcaption></figure><figure><img src="lp/kind-hainegoke-round.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Kiyomizu ware</span><span class="t-ja">清水焼</span></figcaption></figure><figure><img src="lp/kind-hainegoke-oval.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Mashiko ware</span><span class="t-ja">益子焼</span></figcaption></figure><figure><img src="lp/kind-hainegoke-rect.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Tokoname ware</span><span class="t-ja">常滑焼</span></figcaption></figure></div>
+      </div>
+      <div class="plate reveal">
+        <div class="plate-h"><span class="plate-n">03</span><b><span class="t-en">Tama-goke</span><span class="t-ja">タマゴケ</span></b><i>Bartramia pomiformis</i><small><span class="t-en">Apple moss. Bears little round capsules</span><span class="t-ja">丸い粒のような実をつける</span></small></div>
+        <div class="strip"><figure><img src="lp/kind-tamagoke-sphere.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></figcaption></figure><figure><img src="lp/kind-tamagoke-jar.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></figcaption></figure><figure><img src="lp/kind-tamagoke-cube.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></figcaption></figure><figure><img src="lp/kind-tamagoke-round.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Kiyomizu ware</span><span class="t-ja">清水焼</span></figcaption></figure><figure><img src="lp/kind-tamagoke-oval.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Mashiko ware</span><span class="t-ja">益子焼</span></figcaption></figure><figure><img src="lp/kind-tamagoke-rect.jpg" alt="" loading="lazy" width="480" height="480"><figcaption><span class="t-en">Tokoname ware</span><span class="t-ja">常滑焼</span></figcaption></figure></div>
+      </div>
+      <p class="more reveal"><span class="t-en">More mosses and vessels on the way.</span><span class="t-ja">苔も器も、これから増えていきます。</span></p>
     </div>
   </section>
 
@@ -325,6 +434,13 @@ footer a:hover { color: var(--ink); }
           <span class="t-en">Leave the garden open while you read, write or study. Gentle ambient pieces — moss hall, evening wind, night garden, rain — are generated live in the app. Widgets keep the garden on your Home and Lock Screen.</span>
           <span class="t-ja">読書や仕事のあいだ、庭を開いたままにしておけます。苔の堂・夕風・夜の庭・雨音。美しくリラックスできる音楽は、アプリの中でその場で生まれます。ウィジェットでホーム画面やロック画面にも庭を置けます。</span>
         </p>
+        <p class="pieces-h reveal d2"><span class="t-en">Listen here to the same music as the app.</span><span class="t-ja">アプリと同じ音楽をここで聴けます。</span></p>
+        <div class="pieces reveal d3" role="group" aria-label="Ambient music">
+          <button type="button" class="piece" data-piece="hall" aria-pressed="false"><img src="lp/music-hall.jpg" alt="" width="96" height="96"><span><b><span class="t-en">Moss hall</span><span class="t-ja">苔の堂</span></b><small><span class="t-en">Strings and koto, in a long stone echo</span><span class="t-ja">弦と箏。石の堂の長い響き</span></small></span></button>
+          <button type="button" class="piece" data-piece="dusk" aria-pressed="false"><img src="lp/music-dusk.jpg" alt="" width="96" height="96"><span><b><span class="t-en">Evening wind</span><span class="t-ja">夕風</span></b><small><span class="t-en">A breathy flute, and wind through bamboo</span><span class="t-ja">息の混じる笛と、竹を渡る風</span></small></span></button>
+          <button type="button" class="piece" data-piece="night" aria-pressed="false"><img src="lp/music-night.jpg" alt="" width="96" height="96"><span><b><span class="t-en">Night garden</span><span class="t-ja">夜の庭</span></b><small><span class="t-en">Low chords, and distant bell crickets</span><span class="t-ja">低い和音と、遠くの鈴虫</span></small></span></button>
+          <button type="button" class="piece" data-piece="rain" aria-pressed="false"><img src="lp/music-rain.jpg" alt="" width="96" height="96"><span><b><span class="t-en">Rain</span><span class="t-ja">雨音</span></b><small><span class="t-en">Only the rain, falling softly</span><span class="t-ja">ただ、しとしとと降る雨</span></small></span></button>
+        </div>
       </div>
       <div class="photo reveal d1"><img src="lp/life-window.jpg" alt="" loading="lazy" width="1600" height="900"></div>
     </div>
@@ -383,6 +499,7 @@ footer a:hover { color: var(--ink); }
   </div>
 </footer>
 
+<script src="lp/sound.js"></script>
 <script>
 (function () {
   var root = document.documentElement;
@@ -414,6 +531,53 @@ footer a:hover { color: var(--ink); }
   document.querySelectorAll('.lang button').forEach(function (b) {
     b.addEventListener('click', function () { setLang(b.dataset.l); store(b.dataset.l); });
   });
+
+  // 音：はじめは切。入れるとアプリと同じ環境音と薄い雨。映像を流しているあいだは下げる
+  var snd = document.getElementById('snd');
+  var S = window.KokemusuSound;
+  if (!S) snd.hidden = true;
+  var pieces = document.querySelectorAll('.piece, .snd-item');
+  var menu = document.getElementById('sndMenu');
+  var sndOff = document.getElementById('sndOff');
+  function openMenu(v) {
+    menu.hidden = !v;
+    snd.setAttribute('aria-expanded', String(v));
+  }
+  var sndT = document.getElementById('sndT');
+  var sndDefault = sndT.innerHTML;
+  // 帯のボタンは、流れているあいだは曲名を出す
+  function renderSound() {
+    snd.setAttribute('aria-pressed', String(!!(S && S.on)));
+    pieces.forEach(function (b) { b.setAttribute('aria-pressed', String(!!(S && S.on) && b.dataset.piece === S.piece)); });
+    var cur = S && S.on && document.querySelector('.piece[data-piece="' + S.piece + '"] b');
+    sndT.innerHTML = cur ? cur.innerHTML : sndDefault;
+    sndOff.hidden = !(S && S.on);
+  }
+  snd.addEventListener('click', function (e) {
+    e.stopPropagation();
+    openMenu(menu.hidden);
+  });
+  sndOff.addEventListener('click', function () {
+    if (S) S.stop();
+    renderSound();
+    openMenu(false);
+  });
+  menu.addEventListener('click', function (e) { e.stopPropagation(); });
+  document.addEventListener('click', function () { openMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openMenu(false); });
+  // 曲を押すとその曲が流れる。流れている曲をもう一度押すと止まる
+  pieces.forEach(function (b) {
+    if (!S) { b.disabled = true; return; }
+    b.addEventListener('click', function () {
+      if (S.on && S.piece === b.dataset.piece && b.classList.contains('piece')) S.stop();
+      else { S.setPiece(b.dataset.piece); S.start(); }
+      renderSound();
+    });
+  });
+  var film = document.getElementById('filmVideo');
+  film.addEventListener('play', function () { if (S) S.duck(true); });
+  film.addEventListener('pause', function () { if (S) S.duck(false); });
+  film.addEventListener('ended', function () { if (S) S.duck(false); });
 
   // 上の帯：少し下ったら曇りガラスに
   var bar = document.getElementById('bar');
