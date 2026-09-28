@@ -1,7 +1,0 @@
-苔と土の素材は ambientCG（https://ambientcg.com）の CC0 素材を縮小して使っている。
-- moss-*.jpg        : Moss003（https://ambientcg.com/a/Moss003）CC0 1.0
-- soil-gravel-*.jpg : Gravel024（https://ambientcg.com/a/Gravel024）CC0 1.0
-- soil-peat-*.jpg   : Ground048（https://ambientcg.com/a/Ground048）CC0 1.0
-- soil-mud-*.jpg    : Ground036（https://ambientcg.com/a/Ground036）CC0 1.0
-- soil-forest-*.jpg : Ground071（https://ambientcg.com/a/Ground071）CC0 1.0
-（開発中の比較用に 4 種を同梱している。決まったら使わないものは消す）
