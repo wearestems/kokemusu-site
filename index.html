@@ -237,7 +237,8 @@ html[lang="ja"] .live-msg p { font-size: 14px; letter-spacing: .1em; }
 html[lang="ja"] .x-link { font-size: 12px; }
 .x-link:hover { color: var(--ink); }
 .x-link svg { width: 13px; height: 13px; fill: currentColor; }
-.pick-toggle { display: none; }
+.pick-toggle, .pick-done { display: none; }
+.pick-row > p { margin: 16px 0 8px; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); }
 .try-act { display: flex; align-items: center; gap: 22px; margin-top: 30px; }
 .try-call > span { display: none; }
 .try-call[data-state="idle"] .s-idle, .try-call[data-state="raining"] .s-raining, .try-call[data-state="grown"] .s-grown { display: inline; }
@@ -281,16 +282,27 @@ body.is-raining .bar { opacity: .15; }
   html[lang="ja"] .pick-toggle { font: 13px var(--mincho); letter-spacing: .14em; }
   .pick-toggle::after { content: ""; width: 6px; height: 6px; border-right: 1px solid currentColor; border-top: 1px solid currentColor; transform: rotate(-45deg) translateY(2px); transition: transform .5s var(--ease); }
   .hero.pick-open .pick-toggle::after { transform: rotate(135deg) translateY(2px); }
-  /* 苔と器の選びは、押すと操作の上に浮く小さな板 */
+  /* 苔と器の選び：開くと、下の操作（雨の一言・線・ボタン）と同じ場所で入れ替わる。鉢と部屋は動かさない */
+  .live-msg, .live-bar, .try-act { transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s linear 0s; }
+  .hero.pick-open .live-msg, .hero.pick-open .live-bar, .hero.pick-open .try-act { opacity: 0; transform: translateY(6px); visibility: hidden; transition: opacity .4s var(--ease), transform .5s var(--ease), visibility 0s linear .5s; }
   .try-pick {
-    position: absolute; left: -6px; right: -6px; bottom: calc(100% + 12px); margin: 0; padding: 12px 14px 16px;
-    border: 1px solid var(--line); border-radius: 16px; background: rgba(16, 19, 18, .8);
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    opacity: 0; visibility: hidden; transform: translateY(10px); filter: blur(4px); pointer-events: none;
-    transition: opacity .6s var(--ease), transform .7s var(--ease), filter .6s var(--ease), visibility 0s linear .7s;
+    position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+    opacity: 0; visibility: hidden; transform: translateY(10px); pointer-events: none;
+    transition: opacity .5s var(--ease), transform .6s var(--ease), visibility 0s linear .6s;
   }
-  .hero.pick-open .try-pick, .hero.is-raining.pick-open .try-pick { opacity: 1; visibility: visible; transform: none; filter: none; pointer-events: auto; transition-delay: 0s; }
-  .try-pick > p:first-child { margin-top: 0 !important; }
+  .hero.pick-open .try-pick, .hero.is-raining.pick-open .try-pick { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition-delay: .12s, .12s, 0s; }
+  .pick-row { display: flex; align-items: center; gap: 10px; }
+  .pick-row + .pick-row { margin-top: 10px; }
+  .pick-row > p { flex: none; width: 5.4em; margin: 0 !important; font-size: 10px; letter-spacing: .16em; color: var(--faint); }
+  html[lang="ja"] .pick-row > p { width: 1.8em; font-size: 11px; }
+  .pick-row .chips { flex: 1; min-width: 0; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-right: -20px; padding-right: 20px; -webkit-mask-image: linear-gradient(to right, #000 85%, transparent); mask-image: linear-gradient(to right, #000 85%, transparent); }
+  .pick-row .chips::-webkit-scrollbar { display: none; }
+  .pick-row .chip { flex: none; }
+  .pick-done { display: inline-flex; flex: none; padding: 7px 14px; border: 1px solid rgba(169, 214, 143, .45); border-radius: 999px; background: none; color: var(--ink); cursor: pointer; font: 14px var(--latin); letter-spacing: .06em; }
+  html[lang="ja"] .pick-done { font: 13px var(--mincho); letter-spacing: .12em; }
+  .pick-row:first-child .chips { -webkit-mask-image: none; mask-image: none; margin-right: 0; padding-right: 0; }
+  .pick-row:last-child .chips { margin-right: 0; padding-right: 0; }
+  .pick-row .chip { padding: 6px 12px; }
 }
 
 /* ── 04 苔と器：写真の標本帳。苔ごとに一段、六つの器を並べる（狭い画面では横にすべらせる） ── */
@@ -447,7 +459,7 @@ html[lang="ja"] .piece small { font-size: 11px; }
       </div>
       <div class="live reveal d3">
         <div class="live-msg" aria-live="polite">
-          <p data-msg="idle" class="is-on"><span class="t-en">Call the rain, then let go of everything.</span><span class="t-ja">雨を呼んだら、手を離してください</span></p>
+          <p data-msg="idle" class="is-on"><span class="t-en">Call the rain, and the moss begins to grow.</span><span class="t-ja">雨を呼ぶと、苔が育ちはじめます</span></p>
           <p data-msg="still"><span class="t-en">It is raining. The moss is growing.</span><span class="t-ja">雨が降っています。苔が育っています</span></p>
           <p data-msg="paused"><span class="t-en">The rain has stopped.</span><span class="t-ja">雨が上がりました</span></p>
           <p data-msg="grown"><span class="t-en">Fully grown. In the app, it takes many quiet rains.</span><span class="t-ja">育ちきりました。アプリでは、いくつもの静かな雨をかけて育ちます</span></p>
@@ -464,10 +476,8 @@ html[lang="ja"] .piece small { font-size: 11px; }
           <a class="x-link" href="https://x.com/kokemusuapp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="t-en">Follow for launch</span><span class="t-ja">公開の知らせ</span></a>
         </div>
         <div class="try-pick" id="tryPick">
-          <p><span class="t-en">Moss</span><span class="t-ja">苔</span></p>
-          <div class="chips"><button type="button" class="chip" data-species="sugigoke" aria-pressed="true"><span class="t-en">Sugi-goke</span><span class="t-ja">スギゴケ</span></button><button type="button" class="chip" data-species="hainegoke" aria-pressed="false"><span class="t-en">Hai-goke</span><span class="t-ja">ハイゴケ</span></button><button type="button" class="chip" data-species="tamagoke" aria-pressed="false"><span class="t-en">Tama-goke</span><span class="t-ja">タマゴケ</span></button></div>
-          <p><span class="t-en">Vessel</span><span class="t-ja">器</span></p>
-          <div class="chips"><button type="button" class="chip" data-vessel="round" aria-pressed="true"><span class="t-en">Kiyomizu</span><span class="t-ja">清水焼</span></button><button type="button" class="chip" data-vessel="oval" aria-pressed="false"><span class="t-en">Mashiko</span><span class="t-ja">益子焼</span></button><button type="button" class="chip" data-vessel="rect" aria-pressed="false"><span class="t-en">Tokoname</span><span class="t-ja">常滑焼</span></button><button type="button" class="chip" data-vessel="sphere" aria-pressed="false"><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></button><button type="button" class="chip" data-vessel="jar" aria-pressed="false"><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></button><button type="button" class="chip" data-vessel="cube" aria-pressed="false"><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></button></div>
+          <div class="pick-row"><p><span class="t-en">Moss</span><span class="t-ja">苔</span></p><div class="chips"><button type="button" class="chip" data-species="sugigoke" aria-pressed="true"><span class="t-en">Sugi-goke</span><span class="t-ja">スギゴケ</span></button><button type="button" class="chip" data-species="hainegoke" aria-pressed="false"><span class="t-en">Hai-goke</span><span class="t-ja">ハイゴケ</span></button><button type="button" class="chip" data-species="tamagoke" aria-pressed="false"><span class="t-en">Tama-goke</span><span class="t-ja">タマゴケ</span></button></div></div>
+          <div class="pick-row"><p><span class="t-en">Vessel</span><span class="t-ja">器</span></p><div class="chips"><button type="button" class="chip" data-vessel="round" aria-pressed="true"><span class="t-en">Kiyomizu</span><span class="t-ja">清水焼</span></button><button type="button" class="chip" data-vessel="oval" aria-pressed="false"><span class="t-en">Mashiko</span><span class="t-ja">益子焼</span></button><button type="button" class="chip" data-vessel="rect" aria-pressed="false"><span class="t-en">Tokoname</span><span class="t-ja">常滑焼</span></button><button type="button" class="chip" data-vessel="sphere" aria-pressed="false"><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></button><button type="button" class="chip" data-vessel="jar" aria-pressed="false"><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></button><button type="button" class="chip" data-vessel="cube" aria-pressed="false"><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></button></div><button type="button" class="pick-done" id="pickDone"><span class="t-en">Done</span><span class="t-ja">完了</span></button></div>
         </div>
       </div>
     </div>
