@@ -176,6 +176,49 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 footer a { text-decoration: none; }
 footer a:hover { color: var(--ink); }
 
+/* ── 00 雨を降らせてみる：アプリの一鉢を WebGL で。じっとしているあいだだけ育つ ── */
+.try { padding-top: 60px; transition: background 2.4s var(--ease); }
+.try.is-raining { background: #080a09; }
+.try-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "stage head" "stage ctrl"; column-gap: 64px; align-items: center; }
+.try-stage { grid-area: stage; }
+.try-head { grid-area: head; align-self: end; }
+.try-ctrl { grid-area: ctrl; align-self: start; }
+.try-stage { position: relative; width: 100%; max-width: 540px; justify-self: center; aspect-ratio: 4 / 5; border-radius: 22px; overflow: hidden; background: #0c0e0d; box-shadow: 0 0 0 1px var(--line), 0 40px 100px rgba(0, 0, 0, .55); }
+.try-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.try-stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 32%; background: linear-gradient(to top, rgba(8, 10, 9, .72), rgba(8, 10, 9, 0)); pointer-events: none; }
+.try-msgs { z-index: 1; position: absolute; left: 0; right: 0; bottom: 34px; text-align: center; pointer-events: none; }
+.try-msgs p { position: absolute; left: 20px; right: 20px; bottom: 0; margin: 0; font-size: 17px; letter-spacing: .04em; color: var(--ink); text-shadow: 0 1px 12px rgba(0, 0, 0, .7); opacity: 0; transform: translateY(8px); filter: blur(4px); transition: opacity .9s var(--ease), transform .9s var(--ease), filter .9s var(--ease); }
+html[lang="ja"] .try-msgs p { font-size: 14px; letter-spacing: .12em; }
+.try-msgs p.is-on { opacity: 1; transform: none; filter: none; }
+.try-progress { z-index: 1; position: absolute; left: 24px; right: 24px; bottom: 18px; height: 1px; background: rgba(255, 255, 255, .14); }
+.try-progress span { position: absolute; inset: 0; background: var(--moss); box-shadow: 0 0 8px rgba(169, 214, 143, .6); transform-origin: left; transform: scaleX(0); }
+.try-stage.is-nogl::after { content: "WebGL is not available"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--faint); font-size: 14px; }
+.try-side p { max-width: 27em; margin: 22px 0 0; }
+.try-act { display: flex; align-items: center; gap: 22px; margin-top: 30px; }
+.try-call > span { display: none; }
+.try-call[data-state="idle"] .s-idle, .try-call[data-state="raining"] .s-raining, .try-call[data-state="grown"] .s-grown { display: inline; }
+.try-call[data-state="idle"] { border-color: rgba(169, 214, 143, .45); }
+.try-pct { margin: 0 !important; color: var(--faint); font-size: 15px; letter-spacing: .08em; }
+.try-pct b { font-weight: 400; color: var(--ink); font-variant-numeric: tabular-nums; }
+.try-pick { margin-top: 30px; }
+.try-pick > p { margin: 16px 0 8px !important; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { appearance: none; padding: 7px 14px; border: 1px solid var(--line); border-radius: 999px; background: none; color: var(--dim); cursor: pointer; font: 15px/1.2 var(--latin); letter-spacing: .03em; transition: border-color .5s var(--ease), color .5s var(--ease), background .5s var(--ease); }
+html[lang="ja"] .chip { font-family: var(--mincho); font-size: 13px; letter-spacing: .1em; }
+.chip:hover { color: var(--ink); }
+.chip[aria-pressed="true"] { color: var(--ink); border-color: rgba(169, 214, 143, .45); background: rgba(169, 214, 143, .06); }
+/* 雨のあいだは、まわりを静かに */
+body.is-raining .bar { opacity: .15; }
+.bar { transition: opacity 1.2s var(--ease), background .6s var(--ease), backdrop-filter .6s var(--ease); }
+.try.is-raining .try-head, .try.is-raining .try-pick { opacity: .45; transition: opacity 1.6s var(--ease); }
+.try-head, .try-pick { transition: opacity 1.2s var(--ease); }
+@media (max-width: 860px) {
+  .try { padding-top: 40px; }
+  .try-grid { grid-template-columns: 1fr; grid-template-areas: "head" "stage" "ctrl"; row-gap: 28px; }
+  .try-stage { max-width: none; border-radius: 18px; }
+  .try-act { margin-top: 0; }
+}
+
 /* ── 04 苔と器：写真の標本帳。苔ごとに一段、六つの器を並べる（狭い画面では横にすべらせる） ── */
 .kinds-head { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 64px; align-items: end; margin-bottom: 56px; }
 .kinds-head p { margin: 0; }
@@ -314,11 +357,52 @@ html[lang="ja"] .piece small { font-size: 11px; }
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
           <span class="t-en">Follow for launch</span><span class="t-ja">公開の知らせを受け取る</span>
         </a>
-        <a class="btn is-quiet" href="#film"><span class="t-en">Watch the film</span><span class="t-ja">映像を見る</span></a>
+        <a class="btn is-quiet" href="#try"><span class="t-en">Try the rain</span><span class="t-ja">雨を降らせてみる</span></a>
       </div>
     </div>
     <div class="phone reveal d2"><img data-img="rain" src="lp/en-rain.jpg" alt="" width="640" height="1388"></div>
   </div>
+
+  <section class="try" id="try">
+    <div class="wrap try-grid">
+      <div class="try-stage reveal" id="tryStage">
+        <canvas class="try-gl" aria-hidden="true"></canvas>
+        <canvas class="try-rain" aria-hidden="true"></canvas>
+        <div class="try-msgs" aria-live="polite">
+          <p data-msg="idle" class="is-on"><span class="t-en">Call the rain, then let go of everything.</span><span class="t-ja">雨を呼んだら、手を離してください</span></p>
+          <p data-msg="still"><span class="t-en">It is raining. The moss is growing.</span><span class="t-ja">雨が降っています。苔が育っています</span></p>
+          <p data-msg="wait"><span class="t-en">The moss waits while you move.</span><span class="t-ja">動いているあいだ、苔は待っています</span></p>
+          <p data-msg="paused"><span class="t-en">The rain has stopped.</span><span class="t-ja">雨が上がりました</span></p>
+          <p data-msg="grown"><span class="t-en">Fully grown. In the app, it takes many quiet rains.</span><span class="t-ja">育ちきりました。アプリでは、いくつもの静かな雨をかけて育ちます</span></p>
+        </div>
+        <div class="try-progress" aria-hidden="true"><span id="tryBar"></span></div>
+      </div>
+      <div class="try-side try-head">
+        <p class="label reveal" data-n="00"><span class="rule"></span><span class="t-en">Try it</span><span class="t-ja">試してみる</span></p>
+        <h2 class="reveal d1"><span class="t-en">Call the rain.<em>Then stay still.</em></span><span class="t-ja">雨を呼んで<em>そのまま、じっとしていてください</em></span></h2>
+        <p class="reveal d2">
+          <span class="t-en">This is the pot from the app, right in your browser. The moss grows only while you don’t touch anything. Move, scroll or tap, and it waits for you.</span>
+          <span class="t-ja">アプリと同じ鉢を、ブラウザで。何も触らずにいるあいだだけ、苔が育ちます。動かしたり画面をすべらせたりすると、苔は待っています。</span>
+        </p>
+      </div>
+      <div class="try-side try-ctrl">
+        <div class="try-act reveal d2">
+          <button type="button" class="btn try-call" id="tryCall" data-state="idle">
+            <span class="s-idle"><span class="t-en">Call the rain</span><span class="t-ja">雨を呼ぶ</span></span>
+            <span class="s-raining"><span class="t-en">Stop the rain</span><span class="t-ja">雨を止める</span></span>
+            <span class="s-grown"><span class="t-en">Start again</span><span class="t-ja">もう一度</span></span>
+          </button>
+          <p class="try-pct"><span class="t-en">Moss</span><span class="t-ja">苔</span> <b id="tryPct">0</b>%</p>
+        </div>
+        <div class="try-pick reveal d3">
+          <p><span class="t-en">Moss</span><span class="t-ja">苔</span></p>
+          <div class="chips"><button type="button" class="chip" data-species="sugigoke" aria-pressed="true"><span class="t-en">Sugi-goke</span><span class="t-ja">スギゴケ</span></button><button type="button" class="chip" data-species="hainegoke" aria-pressed="false"><span class="t-en">Hai-goke</span><span class="t-ja">ハイゴケ</span></button><button type="button" class="chip" data-species="tamagoke" aria-pressed="false"><span class="t-en">Tama-goke</span><span class="t-ja">タマゴケ</span></button></div>
+          <p><span class="t-en">Vessel</span><span class="t-ja">器</span></p>
+          <div class="chips"><button type="button" class="chip" data-vessel="round" aria-pressed="true"><span class="t-en">Kiyomizu</span><span class="t-ja">清水焼</span></button><button type="button" class="chip" data-vessel="oval" aria-pressed="false"><span class="t-en">Mashiko</span><span class="t-ja">益子焼</span></button><button type="button" class="chip" data-vessel="rect" aria-pressed="false"><span class="t-en">Tokoname</span><span class="t-ja">常滑焼</span></button><button type="button" class="chip" data-vessel="sphere" aria-pressed="false"><span class="t-en">Edo glass</span><span class="t-ja">江戸硝子</span></button><button type="button" class="chip" data-vessel="jar" aria-pressed="false"><span class="t-en">Otaru glass</span><span class="t-ja">小樽硝子</span></button><button type="button" class="chip" data-vessel="cube" aria-pressed="false"><span class="t-en">Hizen vidro</span><span class="t-ja">肥前びいどろ</span></button></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section>
     <div class="statement">
@@ -499,7 +583,7 @@ html[lang="ja"] .piece small { font-size: 11px; }
   </div>
 </footer>
 
-<script src="lp/sound.js"></script>
+<script src="lp/lp.js"></script>
 <script>
 (function () {
   var root = document.documentElement;
