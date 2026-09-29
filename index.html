@@ -226,6 +226,7 @@ html[lang="ja"] .live-msg p { font-size: 14px; letter-spacing: .1em; }
 html[lang="ja"] .x-link { font-size: 12px; }
 .x-link:hover { color: var(--ink); }
 .x-link svg { width: 13px; height: 13px; fill: currentColor; }
+.pick-toggle { display: none; }
 .try-act { display: flex; align-items: center; gap: 22px; margin-top: 30px; }
 .try-call > span { display: none; }
 .try-call[data-state="idle"] .s-idle, .try-call[data-state="raining"] .s-raining, .try-call[data-state="grown"] .s-grown { display: inline; }
@@ -248,12 +249,37 @@ body.is-raining .bar { opacity: .15; }
   .hero { display: block; padding: 0; min-height: 0; }
   .hero-bg { display: none; }
   .hero-stage { position: absolute; inset: 0; justify-self: stretch; align-self: stretch; width: auto; height: auto; aspect-ratio: auto; max-width: none; border-radius: 0; box-shadow: none; z-index: -1; }
-  .hero-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(10, 12, 11, .82), rgba(10, 12, 11, .25) 34%, rgba(10, 12, 11, 0) 48%, rgba(10, 12, 11, .35) 64%, rgba(10, 12, 11, .92) 82%, var(--bg)); }
-  .hero-copy { display: flex; flex-direction: column; min-height: 100svh; padding: calc(96px + env(safe-area-inset-top)) 20px 30px; }
+  .hero-stage::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, rgba(10, 12, 11, .7), rgba(10, 12, 11, .2) 30%, rgba(10, 12, 11, 0) 40%, rgba(10, 12, 11, 0) 68%, rgba(10, 12, 11, .55) 80%, var(--bg)); }
+  .hero-copy { display: flex; flex-direction: column; height: 100svh; min-height: 600px; padding: calc(84px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)); }
+  .hero-top .eyebrow { margin-bottom: 14px; }
+  .hero-top .wordmark { font-size: 34px; }
+  .hero-top .wordmark-ja { margin-top: 10px; font-size: 12px; }
   .hero-top .lede { display: none; }
-  .tagline { margin-top: 26px; }
-  .live { margin-top: auto; }
-  .try-act { flex-wrap: wrap; row-gap: 12px; }
+  .tagline { margin-top: 18px; font-size: 24px; }
+  html[lang="ja"] .tagline { font-size: 18px; line-height: 1.75; }
+  .live { position: relative; margin-top: auto; }
+  .live-bar { margin: 10px 0 16px; }
+  .try-act { gap: 14px; flex-wrap: nowrap; }
+  .try-call, .try-pct, .pick-toggle { white-space: nowrap; }
+  .try-call { padding: 0 20px; }
+  .x-link { display: none; }
+  .pick-toggle {
+    display: inline-flex; align-items: center; gap: 8px; margin-left: auto; padding: 8px 6px 8px 10px; border: 0; background: none; cursor: pointer;
+    color: var(--dim); font: 15px var(--latin); letter-spacing: .06em;
+  }
+  html[lang="ja"] .pick-toggle { font: 13px var(--mincho); letter-spacing: .14em; }
+  .pick-toggle::after { content: ""; width: 6px; height: 6px; border-right: 1px solid currentColor; border-top: 1px solid currentColor; transform: rotate(-45deg) translateY(2px); transition: transform .5s var(--ease); }
+  .hero.pick-open .pick-toggle::after { transform: rotate(135deg) translateY(2px); }
+  /* 苔と器の選びは、押すと操作の上に浮く小さな板 */
+  .try-pick {
+    position: absolute; left: -6px; right: -6px; bottom: calc(100% + 12px); margin: 0; padding: 12px 14px 16px;
+    border: 1px solid var(--line); border-radius: 16px; background: rgba(16, 19, 18, .8);
+    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+    opacity: 0; visibility: hidden; transform: translateY(10px); filter: blur(4px); pointer-events: none;
+    transition: opacity .6s var(--ease), transform .7s var(--ease), filter .6s var(--ease), visibility 0s linear .7s;
+  }
+  .hero.pick-open .try-pick, .hero.is-raining.pick-open .try-pick { opacity: 1; visibility: visible; transform: none; filter: none; pointer-events: auto; transition-delay: 0s; }
+  .try-pick > p:first-child { margin-top: 0 !important; }
 }
 
 /* ── 04 苔と器：写真の標本帳。苔ごとに一段、六つの器を並べる（狭い画面では横にすべらせる） ── */
@@ -424,9 +450,10 @@ html[lang="ja"] .piece small { font-size: 11px; }
             <span class="s-grown"><span class="t-en">Start again</span><span class="t-ja">もう一度</span></span>
           </button>
           <p class="try-pct"><span class="t-en">Moss</span><span class="t-ja">苔</span> <b id="tryPct">0</b>%</p>
+          <button type="button" class="pick-toggle" id="pickToggle" aria-expanded="false" aria-controls="tryPick"><span class="t-en">Moss &amp; vessel</span><span class="t-ja">苔と器</span></button>
           <a class="x-link" href="https://x.com/kokemusuapp" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg><span class="t-en">Follow for launch</span><span class="t-ja">公開の知らせ</span></a>
         </div>
-        <div class="try-pick">
+        <div class="try-pick" id="tryPick">
           <p><span class="t-en">Moss</span><span class="t-ja">苔</span></p>
           <div class="chips"><button type="button" class="chip" data-species="sugigoke" aria-pressed="true"><span class="t-en">Sugi-goke</span><span class="t-ja">スギゴケ</span></button><button type="button" class="chip" data-species="hainegoke" aria-pressed="false"><span class="t-en">Hai-goke</span><span class="t-ja">ハイゴケ</span></button><button type="button" class="chip" data-species="tamagoke" aria-pressed="false"><span class="t-en">Tama-goke</span><span class="t-ja">タマゴケ</span></button></div>
           <p><span class="t-en">Vessel</span><span class="t-ja">器</span></p>
