@@ -176,6 +176,40 @@ footer nav { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 footer a { text-decoration: none; }
 footer a:hover { color: var(--ink); }
 
+/* ── 入口の幕：「雨を呼ぶ」で霧雨が満ち、晴れると LP がはじまる ── */
+html.gated { overflow: hidden; }
+html.gated .snd-wrap { opacity: 0; pointer-events: none; }
+.gate { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: var(--bg); transition: opacity 1.9s var(--ease), filter 1.9s var(--ease); }
+.gate[hidden] { display: none; }
+.gate.is-out { opacity: 0; filter: blur(10px); pointer-events: none; }
+.gate-bg { position: absolute; inset: -4%; background: url(lp/hero.jpg) center / cover no-repeat; filter: brightness(.42) saturate(.85); transform: scale(1); transition: transform 9s cubic-bezier(.2, .6, .2, 1), filter 3s var(--ease); }
+.gate.is-rain .gate-bg { transform: scale(1.06); filter: brightness(.36) saturate(.7) blur(1.5px); }
+.gate-veil { position: absolute; inset: 0; opacity: 0; background: linear-gradient(to bottom, rgba(196, 208, 212, .22), rgba(180, 194, 198, .1) 70%, rgba(180, 194, 198, 0)); transition: opacity 2.4s var(--ease); }
+.gate.is-rain .gate-veil { opacity: 1; }
+.gate-said { position: absolute; left: 24px; right: 24px; top: 50%; margin: 0; transform: translateY(-40%); text-align: center; font-size: clamp(26px, 3vw, 36px); letter-spacing: .14em; color: var(--ink); opacity: 0; filter: blur(8px); transition: opacity 1.4s var(--ease) .7s, filter 1.4s var(--ease) .7s, transform 2.4s var(--ease) .7s; pointer-events: none; }
+.gate-said small { display: block; margin-top: 10px; font-size: 14px; letter-spacing: .12em; color: var(--dim); }
+html[lang="ja"] .gate-said { font-family: var(--mincho); font-size: clamp(20px, 2.4vw, 26px); }
+html[lang="ja"] .gate-said small { font-size: 12px; }
+.gate.is-rain .gate-said { opacity: 1; filter: none; transform: translateY(-50%); }
+.gate.is-quiet .gate-said { display: none; }
+.gate-rain { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gate-in { position: relative; text-align: center; padding: 0 24px; transition: opacity 1s var(--ease), transform 1.2s var(--ease), filter 1s var(--ease); }
+.gate.is-rain .gate-in { opacity: 0; transform: translateY(-10px); filter: blur(6px); }
+.gate-name { margin: 0; font-size: clamp(30px, 5vw, 54px); letter-spacing: .42em; margin-right: -.42em; color: var(--ink); }
+.gate-ja { margin: 10px 0 0; font-family: var(--mincho); font-size: 13px; letter-spacing: .6em; margin-right: -.6em; color: var(--faint); }
+.gate-line { margin: 56px 0 0; font-size: clamp(24px, 2.8vw, 32px); line-height: 1.3; color: var(--dim); }
+.gate-line em { display: block; color: var(--ink); }
+html[lang="ja"] .gate-line { font-family: var(--mincho); font-size: clamp(18px, 2vw, 22px); line-height: 1.9; letter-spacing: .1em; }
+html[lang="ja"] .gate-line em { font-style: normal; }
+.gate-call { margin-top: 40px; min-height: 54px; padding: 0 34px; font-size: 16px; border-color: rgba(169, 214, 143, .5); box-shadow: 0 0 40px rgba(169, 214, 143, .12); }
+.gate-sub { margin: 14px 0 0; font-size: 12px; letter-spacing: .3em; text-transform: uppercase; color: var(--faint); }
+html[lang="ja"] .gate-sub { letter-spacing: .2em; }
+.gate-skip { appearance: none; margin-top: 30px; padding: 8px 12px; border: 0; background: none; cursor: pointer; color: var(--faint); font: italic 15px var(--latin); text-decoration: underline; text-decoration-color: rgba(143, 153, 141, .4); text-underline-offset: 4px; }
+html[lang="ja"] .gate-skip { font: 12px var(--mincho); letter-spacing: .12em; }
+/* 幕が上がるまで、はじめの一面の中身は出さない（上がったら順に浮かぶ） */
+html.gated .hero .reveal.is-in { opacity: 0; transform: translateY(26px); filter: blur(6px); }
+.bar { z-index: 30; }
+
 /* ── 00 雨を降らせてみる：アプリの一鉢を WebGL で。じっとしているあいだだけ育つ ── */
 .try { padding-top: 60px; transition: background 2.4s var(--ease); }
 .try.is-raining { background: #080a09; }
@@ -218,6 +252,24 @@ body.is-raining .bar { opacity: .15; }
   .try-stage { max-width: none; border-radius: 18px; }
   .try-act { margin-top: 0; }
 }
+
+/* ── 公開の知らせ（Kit） ── */
+.notify { max-width: 460px; margin: 34px auto 0; }
+.notify[hidden] { display: none; }
+.notify-h { margin: 0 0 14px; color: var(--dim); }
+.notify-row { display: flex; gap: 8px; }
+.notify-row[hidden] { display: none; }
+.notify input {
+  flex: 1; min-width: 0; height: 48px; padding: 0 18px; border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px;
+  background: rgba(255, 255, 255, .04); color: var(--ink); font: 16px var(--latin); letter-spacing: .02em; outline: none;
+  transition: border-color .5s var(--ease);
+}
+.notify input:focus { border-color: rgba(169, 214, 143, .5); }
+.notify input::placeholder { color: var(--faint); }
+.notify .btn { flex: none; border-color: rgba(169, 214, 143, .45); }
+.notify-note { margin: 12px 0 0; font-size: 13px; color: var(--faint); }
+.notify-note.is-err { color: #d9aaa0; }
+.closing .notify + .cta { margin-top: 22px; }
 
 /* ── 04 苔と器：写真の標本帳。苔ごとに一段、六つの器を並べる（狭い画面では横にすべらせる） ── */
 .kinds-head { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 64px; align-items: end; margin-bottom: 56px; }
@@ -335,6 +387,21 @@ html[lang="ja"] .piece small { font-size: 11px; }
   </div>
   </div>
 </header>
+
+<div class="gate" id="gate" hidden>
+  <div class="gate-bg" aria-hidden="true"></div>
+  <div class="gate-veil" aria-hidden="true"></div>
+  <canvas class="gate-rain" aria-hidden="true"></canvas>
+  <p class="gate-said" aria-live="polite"><span class="t-en">The rain has begun<small>Set the phone down and take a breath</small></span><span class="t-ja">雨が降りはじめました<small>スマホを置いて、ひと息つきましょう</small></span></p>
+  <div class="gate-in">
+    <p class="gate-name">KOKEMUSU</p>
+    <p class="gate-ja">苔生す</p>
+    <p class="gate-line"><span class="t-en">Before you scroll,<em>let it rain.</em></span><span class="t-ja">スクロールする前に<em>雨を呼んでみませんか</em></span></p>
+    <button type="button" class="btn gate-call" id="gateCall"><span class="t-en">Call the rain</span><span class="t-ja">雨を呼ぶ</span></button>
+    <p class="gate-sub"><span class="t-en">Sound on</span><span class="t-ja">音が出ます</span></p>
+    <button type="button" class="gate-skip" id="gateSkip"><span class="t-en">Enter quietly</span><span class="t-ja">音なしで入る</span></button>
+  </div>
+</div>
 
 <main id="top">
   <div class="hero">
@@ -563,6 +630,16 @@ html[lang="ja"] .piece small { font-size: 11px; }
   <section class="closing">
     <img class="mark reveal" src="icon.png" alt="" width="76" height="76">
     <h2 class="reveal d1"><span class="t-en">Coming soon<em>to the App Store.</em></span><span class="t-ja">まもなく App Store で<em>iPhone 版を公開します</em></span></h2>
+    <form class="notify reveal d2" id="notify" data-kit="" hidden novalidate>
+      <p class="notify-h"><span class="t-en">Get one email when KOKEMUSU launches.</span><span class="t-ja">公開したときに、一度だけメールでお知らせします。</span></p>
+      <div class="notify-row">
+        <input type="email" name="email_address" autocomplete="email" required aria-label="Email" placeholder="you@example.com">
+        <button type="submit" class="btn"><span class="t-en">Notify me</span><span class="t-ja">知らせを受け取る</span></button>
+      </div>
+      <p class="notify-note" data-note="idle"><span class="t-en">No spam. Unsubscribe anytime.</span><span class="t-ja">ほかのことには使いません。いつでも解除できます。</span></p>
+      <p class="notify-note" data-note="done" hidden><span class="t-en">Thank you. Please check your inbox to confirm.</span><span class="t-ja">ありがとうございます。届いたメールで登録を確かめてください。</span></p>
+      <p class="notify-note is-err" data-note="bad" hidden><span class="t-en">Please enter a valid email address.</span><span class="t-ja">メールアドレスを確かめてください。</span></p>
+    </form>
     <div class="cta reveal d2">
       <a class="btn" href="https://x.com/kokemusuapp" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -662,6 +739,52 @@ html[lang="ja"] .piece small { font-size: 11px; }
   film.addEventListener('play', function () { if (S) S.duck(true); });
   film.addEventListener('pause', function () { if (S) S.duck(false); });
   film.addEventListener('ended', function () { if (S) S.duck(false); });
+
+  // 入口の幕：一度入ったら、この窓を閉じるまでは出さない。#… 付きで来たとき・JS の無いときも出さない
+  var gate = document.getElementById('gate');
+  var entered = false;
+  try { entered = sessionStorage.getItem('kokemusu-entered') === '1'; } catch (e) {}
+  if (!entered && !location.hash) {
+    root.classList.add('gated');
+    gate.hidden = false;
+    var gd = window.KokemusuDrizzle ? new window.KokemusuDrizzle(gate.querySelector('.gate-rain')) : null;
+    if (gd) gd.level = 0.18;
+    var open = function (withSound) {
+      try { sessionStorage.setItem('kokemusu-entered', '1'); } catch (e) {}
+      if (withSound && S) { S.start(); renderSound(); }
+      if (!withSound) gate.classList.add('is-quiet');
+      gate.classList.add('is-rain');
+      if (gd) gd.level = 1;
+      var wait = withSound ? 3400 : 700;
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) wait = 300;
+      setTimeout(function () {
+        gate.classList.add('is-out');
+        root.classList.remove('gated');
+        setTimeout(function () { gate.hidden = true; if (gd) gd.level = 0; }, 2000);
+      }, wait);
+    };
+    document.getElementById('gateCall').addEventListener('click', function () { open(true); });
+    document.getElementById('gateSkip').addEventListener('click', function () { open(false); });
+  }
+
+  // 公開の知らせ：Kit のフォームへ送る（form ID が入っているときだけ出す）
+  var nf = document.getElementById('notify');
+  if (nf && nf.dataset.kit) {
+    nf.hidden = false;
+    var note = function (n) { nf.querySelectorAll('[data-note]').forEach(function (p) { p.hidden = p.dataset.note !== n; }); };
+    nf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var input = nf.querySelector('input');
+      var v = input.value.trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { note('bad'); input.focus(); return; }
+      var fd = new FormData();
+      fd.append('email_address', v);
+      fd.append('fields[lang]', root.lang);
+      fetch('https://app.kit.com/forms/' + nf.dataset.kit + '/subscriptions', { method: 'POST', body: fd, mode: 'no-cors' })
+        .catch(function () {})
+        .then(function () { note('done'); nf.querySelector('.notify-row').hidden = true; });
+    });
+  }
 
   // 上の帯：少し下ったら曇りガラスに
   var bar = document.getElementById('bar');
