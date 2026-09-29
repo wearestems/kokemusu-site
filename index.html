@@ -111,6 +111,9 @@ html[lang="ja"] .btn { font-family: var(--mincho); font-size: 13px; }
 .btn:active { transform: scale(.955); }
 .btn svg { width: 15px; height: 15px; fill: currentColor; }
 .btn.is-quiet { border-color: transparent; background: none; backdrop-filter: none; color: var(--dim); }
+/* 明朝は字面が行の中心より少し下に座るので、ボタンの中の日本語だけ少し持ち上げる */
+html[lang="ja"] :is(.btn, .chip, .pick-toggle, .pick-done, .snd, .snd-item, .snd-off) .t-ja { position: relative; top: -.06em; }
+.lang button[data-l="ja"] { padding-top: 4px; padding-bottom: 6px; }
 
 .phone {
   --pw: min(300px, 70vw);
@@ -172,7 +175,8 @@ html[lang="ja"] .plan h3 { font-size: 19px; letter-spacing: .12em; }
 .plan .sub { margin: 0 0 14px; color: var(--faint); font-size: .9em; }
 .plan ul { list-style: none; margin: 0; padding: 0; }
 .plan li { padding: 8px 0 8px 20px; position: relative; font-size: .95em; }
-.plan li::before { content: ""; position: absolute; left: 2px; top: 1.05em; width: 5px; height: 5px; border-radius: 50%; background: var(--faint); }
+.plan li::before { content: ""; position: absolute; left: 2px; top: 1.05em; top: calc(8px + .5lh - 2.5px); width: 5px; height: 5px; border-radius: 50%; background: var(--faint); }
+html[lang="en"] .plan li::before { top: calc(8px + .5lh + .12em - 2.5px); }
 .plan.is-nw { border-color: rgba(169, 214, 143, .3); }
 .plan.is-nw li::before { background: var(--moss); box-shadow: 0 0 6px rgba(169, 214, 143, .6); }
 
