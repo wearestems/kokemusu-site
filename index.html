@@ -121,7 +121,18 @@ html[lang="ja"] .btn { font-family: var(--mincho); font-size: 13px; }
 .phone img { width: 100%; height: auto; aspect-ratio: 1179 / 2556; object-fit: cover; border-radius: calc(var(--pw) * .133); }
 
 /* ── 本文 ── */
-section { position: relative; padding: 120px max(24px, 6vw); }
+section { position: relative; isolation: isolate; padding: 120px max(24px, 6vw); }
+/* 本文の背景：ぼんやりとしたスポットライト。絵や写真のある側を、少しだけ明るく */
+section::before {
+  content: ""; position: absolute; inset: -10% 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 60% at var(--sx, 70%) var(--sy, 50%), rgba(150, 178, 160, .17), rgba(150, 178, 160, .05) 48%, transparent 74%),
+    radial-gradient(ellipse 40% 45% at calc(100% - var(--sx, 70%)) 60%, rgba(120, 140, 130, .05), transparent 70%);
+}
+section:has(.row.flip) { --sx: 30%; }
+section:has(.statement), section.film, section.closing { --sx: 50%; }
+section.film { --sy: 55%; }
+section.kinds { --sx: 50%; --sy: 30%; }
 .wrap { max-width: 1120px; margin: 0 auto; }
 .statement { max-width: 820px; margin: 0 auto; text-align: center; }
 .statement p.big { margin: 0; font-size: clamp(26px, 3vw, 38px); line-height: 1.45; color: var(--ink); }
